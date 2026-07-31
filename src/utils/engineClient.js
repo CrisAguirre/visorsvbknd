@@ -9,11 +9,12 @@ async function checkEngine() {
   return res.data;
 }
 
-async function processWithEngine(filePath, originalName, reference, unit) {
+async function processWithEngine(filePath, originalName, reference, unit, mode) {
   const form = new FormData();
   form.append("file", fs.createReadStream(filePath), originalName);
   form.append("reference", String(reference));
   form.append("unit", unit);
+  form.append("mode", mode);
   const res = await axios.post(`${ENGINE_URL}/process`, form, {
     headers: form.getHeaders(),
     timeout: 60000,

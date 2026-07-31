@@ -10,6 +10,7 @@ const imageRecordSchema = new mongoose.Schema(
     renderUrl: { type: String, required: true },
     referenceValue: { type: Number, required: true },
     unit: { type: String, default: "cm" },
+    mode: { type: String, enum: ["plano", "render"], default: "plano" },
     summary: { type: mongoose.Schema.Types.Mixed },
   },
   { timestamps: true }

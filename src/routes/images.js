@@ -56,16 +56,17 @@ router.post("/", authRequired, upload.single("image"), async (req, res) => {
     }
     const reference = parseFloat(req.body.reference);
     const unit = req.body.unit || "cm";
+    const mode = req.body.mode === "render" ? "render" : "plano";
     if (!reference || reference <= 0) {
       fs.unlinkSync(req.file.path);
       return res.status(400).json({ error: "reference debe ser un número mayor a 0" });
     }
 
     const ext = path.extname(req.file.originalname).toLowerCase();
-    const renderName = `${path.basename(req.file.filename, ext)}_render.png`;
+    const renderName = `${path.basename(req.file.filename, ext)}_${mode}_render.png`;
     const renderPath = path.join(RENDERS_DIR, renderName);
 
-    const result = await processWithEngine(req.file.path, req.file.originalname, reference, unit);
+    const result = await processWithEngine(req.file.path, req.file.originalname, reference, unit, mode);
 
     const engineRenderUrl = result.render_url;
     const engineRenderPath = path.join(__dirname, "..", "..", "..", "engine", "renders", result.render_file);
@@ -82,6 +83,7 @@ router.post("/", authRequired, upload.single("image"), async (req, res) => {
       renderUrl: toUrl(req, "renders", renderName),
       referenceValue: reference,
       unit,
+      mode,
       summary: result.summary,
     });
 
@@ -91,6 +93,7 @@ router.post("/", authRequired, upload.single("image"), async (req, res) => {
       renderUrl: record.renderUrl,
       referenceValue: record.referenceValue,
       unit: record.unit,
+      mode: record.mode,
       summary: record.summary,
       engineRenderUrl,
     });
