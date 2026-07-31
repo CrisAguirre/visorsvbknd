@@ -68,7 +68,7 @@ router.post("/", authRequired, upload.single("image"), async (req, res) => {
     const result = await processWithEngine(req.file.path, req.file.originalname, reference, unit);
 
     const engineRenderUrl = result.render_url;
-    const engineRenderPath = path.join(__dirname, "..", "..", "engine", "renders", result.render_file);
+    const engineRenderPath = path.join(__dirname, "..", "..", "..", "engine", "renders", result.render_file);
     if (fs.existsSync(engineRenderPath)) {
       fs.copyFileSync(engineRenderPath, renderPath);
     }
